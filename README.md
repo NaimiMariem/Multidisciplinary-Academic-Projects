@@ -1,1 +1,1 @@
-# Calcul-stochastique_M-thodes-num-riques
+# Calcul-stochastique_Méthodes-numériques
