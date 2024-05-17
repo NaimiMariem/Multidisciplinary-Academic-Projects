@@ -73,14 +73,10 @@ Contributions are welcomed! Whether it's improvements to existing projects, addi
 
 ---
 
-## License
 
-This repository is open-source and available under [LICENSE_NAME]. See the individual project folders for specific licenses and usage permissions.
-
----
 
 ## About
 
-This repository is a compilation of projects completed during coursework and is maintained by [Your Name]. Some projects may not have undergone revision. Connect with me on [LinkedIn](https://linkedin.com/yourprofile) for discussions, collaborations, and more.
+This repository is a compilation of projects completed during coursework and is maintained by [Your Name]. Some projects may not have undergone revision. Connect with me on [LinkedIn]([https://linkedin.com/yourprofile](https://www.linkedin.com/in/mariem-n/)) for discussions, collaborations, and more.
 
 
