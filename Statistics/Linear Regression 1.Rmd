@@ -1,0 +1,211 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+# BE1-
+
+**Meriem Tarqui - Mariem Naimi**
+
+## Exercice1:
+
+Variable à expliquer: Y= le prix de mise en vente
+
+Variable explicative: X= surface
+
+#### Visualisation de données:
+
+```{r}
+Immo = read.table(file = "immo.txt", header = TRUE)
+head(Immo)
+pairs(Immo)
+
+```
+
+#### Question 1.a 
+
+Droite de la Regression
+
+```{r}
+mod1 = lm(prix~m2, data = Immo)
+summary(mod1)
+
+plot(prix~m2, data = Immo)
+abline(mod1$coefficients, col = 'red')
+```
+
+#### Question 1.b : $R^2$= 0.9 donc 90% de la variance est expliquée par le modèle
+
+#### Question 1.c : Test de significativité
+
+Hypothèse H0: $\beta_{i}$ =0 pour i = 1,2 (non linéarité)
+
+C'est une statistique de Fischer de n-(p+1)=25 dégrés de liberté.
+
+La p-value = 1.64e-14 \<0.05, ainsi on rejette H0 =\> Ainsi il existe au moins un i tel que $\beta_{i}$ différent de 0. *Donc le modèle linéaire est à garder.*
+
+#### Question 2 et 3: Prédiction et intervalles de confiance:
+
+```{r}
+nouvel_individu = data.frame(m2= 90)
+prediction = predict(mod1, newdata = nouvel_individu)
+plot(prix~m2, data = Immo)
+abline(mod1$coefficients, col = 'red')
+points(nouvel_individu$m2,prediction,col ="blue", pch = 19)
+#print(prediction)
+```
+
+On déduit que le prix prévu pour un appartement de 90m2 est 223.9215 Keuros (le point bleu sur le graphique).
+
+```{r}
+prediction_IC = data.frame(predict(mod1, newdata = nouvel_individu, interval = 'confidence', level = 0.95))
+prediction_IC
+plot(prix~m2, data = Immo)
+abline(mod1$coefficients, col = 'red')
+points(nouvel_individu$m2,prediction_IC$fit,col ="blue", pch = 19)
+points(nouvel_individu$m2,prediction_IC$lwr,col ="blue", pch = 19)
+points(nouvel_individu$m2,prediction_IC$upr,col ="blue", pch = 19)
+
+
+prediction_IP = data.frame(predict(mod1, newdata = nouvel_individu, interval = 'prediction', level = 0.95))
+points(nouvel_individu$m2,prediction_IP$lwr,col ="blue", pch = 19)
+points(nouvel_individu$m2,prediction_IP$upr,col ="blue", pch = 19)
+prediction_IP
+```
+
+Ainsi, l'intervalle de confiance pour ce prix à une incertitude de 95% est [209.962 , 237.8809] en Keuros.
+
+Ensuite, l'intervalle de prédiction est [154.3086 , 293.5343], ce qui veut dire que c'est statistiquement acceptable de mettre en vente un appartement de 90m2 à 280Keuros pour un intervalle de prédiction à 95%.
+
+#### Question 4: Etude de résidus et ajustement du modèle
+
+```{r}
+plot(mod1)
+```
+
+Etude des résidus : on remarque sur le graphique Residuals vs Fitted, que les résidus prennnent des grandes valeurs (à peu près 50) et que la droite de tendance n'est pas plate (dans un modèle linéaire idéal les résidus sont à peu près nuls et sont indépendants des estimations). On remarque également que les résidus ne sont pas répartis unifromément par rapport à la courbe de tendance ce qui signifie qu'ils dépendent des estimations, ce qui remet en question la validité de ce modèle de régression linéaire.
+
+```{r}
+mod2 = lm(prix~m2+I(m2^2), data = Immo)
+summary(mod2)
+
+plot(mod2)
+
+```
+
+Pour affiner le modèle de régression linéaire, on étudie le modèle suivant :
+
+Y = $\beta{0} + \beta{1} X + \beta{2} X^2$
+
+L'erreur standard résiduel R2 de ce nouveau modèle est supérieur au R2 du premier modèle (0.9088). En plus, en comparant les résidus, on s'aperçoit que les résidus du premier modèle sont élevés par rapport au nouveau modèle (entre -50 et 50 pour le premier, et -40 et 40 pour le deuxième pour la majorité des erreurs). On en déduit que ce modèle est meilleur que le premier.
+
+```{r}
+plot(prix~m2, data = Immo)
+abline(mod1$coefficients, col = 'red')
+prediction_IP = data.frame(predict(mod2, newdata = nouvel_individu, interval = 'prediction', level = 0.95))
+points(nouvel_individu$m2,prediction_IP$lwr,col ="blue", pch = 19)
+points(nouvel_individu$m2,prediction_IP$upr,col ="blue", pch = 19)
+prediction_IP
+```
+
+Ainsi, l'intervalle di'ncertitude de prédiction pour un appartement de 90m2 a été réduit.
+
+## Exercice2:
+
+Les variables explicatives:\
+--- CRIM taux de criminalité par habitant --- ZN proportion de terrains résidentiels --- INDUS proportion de terrains industriels --- CHAS 1 si ville en bordure de la rivière Charles 0 sinon --- NOX concentration en oxydes d'azote --- RM nombre moyen de pièces par logement --- AGE proportion de logements construit avant 1940 --- DIS distance du centre de Boston --- RAD accessibilité aux autoroutes de contournement --- TAX taux de l'impôt foncier --- PTRATIO rapport élèves-enseignant par ville --- LSTAT % de la population à faibles revenus
+
+La variable à expliquer --- class valeur du logement en 1000\$
+
+#### Question 1.
+
+```{r}
+House = read.table(file = "housing_new.txt", header = TRUE)
+head(House)
+mod3=lm(class~.,data=House )
+
+summary(mod3)
+
+```
+
+Le R2 = 0.7343 donc 73% de la variance est expliquée par le modèle
+
+#### Question 2 : test de significativité
+
+Hypothèse H0: $\beta_{i}$ =0 pour i = 1,2,..12 (test de non linéarité)
+
+C'est une statistique de Fischer de n-(p+1)=493 dégrés de liberté. Sous H0, F = MSR/MSE suit la loi de fisher de n-(p+1)=493.
+
+La p-value = 2.26e-16 \<**0.01**, ainsi on rejette H0 =\> Ainsi il existe au moins un i tel que $\beta_{i}$ différent de 0. *Donc le modèle linéaire est à garder.*
+
+#### Question 3 .
+
+Les variables significatives sont celles dont la p_value du test de student **est inférieure à 0.01.** Ainsi, les seuls variables qui ne sont pas significatives sont **INDUS et AGE.** Ainsi on est sûr que ces variables ne sont pas significatives.
+
+#### Question 4.
+
+Pour simplifier le modèle, on peut utiliser la méthode backward sur le test de student :
+
+Dans cette méthode, on commence par le modèle complet avec toutes les variables Xi. Ensuite, à chaque pas on enlève la variable la moins significative, c'est-à-dire celle ayant la plus grande p_value. Le test s'arrête lorsque la p_value devient plus petite que 0.05.
+
+On commence alors par enlever INDUS, et ensuite AGE.
+
+```{r}
+mod4=lm(class~. - INDUS ,data=House )
+
+summary(mod4)
+
+
+```
+
+```{r}
+mod5=lm(class~. - INDUS-AGE ,data=House )
+
+summary(mod5)
+plot(mod5)
+```
+
+#### Question 5 .
+
+On remarque que l'erreur R2 a peu près gardé la même valeur du modèle initial. En plus, en regardant les graphiques sur les résidus, variance, effet de levier et Q-Q plot, on s'aperçoit que les résidus n'ont pas été réduits et que le modèle n'a pas été amélioré. On en déduit que ce nouveau modèle n'est pas satisfaisant.
+
+#### Question 6:
+
+On conclut de la question précédente que la sélection des variables en utilisant le test de student ne permet pas d'améliorer le modèle.
+
+On propose alors d'utiliser les critères AIC et BIC
+
+Critère d'Akaike : AIC = −2 ∗ logL + 2(p + 1)
+
+Critère Bayesien : BIC = −2 ∗ logL + ln(n)(p + 1)
+
+Avec: L la vraisemblance
+
+p= 12
+
+n= 506
+
+Dans cette méthode , l'algorithme démarre cette fois du modèle complet. A chaque l'étape, la variable associée la plus grande diminution de l'AIC est éliminée du modèle. La procédure s'arrête lorsque quelque soit la variable à retirer le critère AIC (resp. BIC) remonte.
+
+```{r}
+slm_AIC <- step(mod3,direction= "backward",k = 2, trace= FALSE)
+slm_BIC <- step(mod3,direction= "backward",k = log(nrow(House)), trace= FALSE)
+coef(slm_AIC)
+coef(slm_BIC)
+```
+
+On remarque que les deux méthodes AIC et BIC élliminent les deux variables elliminés par la méthode de Student faite auparavant (INDUS et AGE).
+
+On propose alors un nouveau modèle qui ne prend en compte que les variables significatives et leur carrés :
+
+```{r}
+mod4=lm(class~ CRIM+ZN+CHAS+NOX+RM+DIS+RAD+TAX+PTRATIO+LSTAT+I(CRIM^2)+I(ZN^2)+I(CHAS^2)+I(NOX^2)+I(RM^2)+I(DIS^2)+I(RAD^2)+I(TAX^2)+I(PTRATIO^2)+I(LSTAT^2),data=House )
+
+summary(mod4)
+
+
+```
+
+On remarque que effectivement ce modèle est meileur, puisqu'il a un R2 plus élevé (0.8272).
