@@ -73,10 +73,7 @@ Contributions are welcomed! Whether it's improvements to existing projects, addi
 
 ---
 
-
-
 ## About
 
-This repository is a compilation of projects completed during coursework and is maintained by [Your Name]. Some projects may not have undergone revision. Connect with me on [LinkedIn]([https://linkedin.com/yourprofile](https://www.linkedin.com/in/mariem-n/)) for discussions, collaborations, and more.
-
+This repository is a compilation of projects completed during coursework and is maintained by Mariem NAIMI. Some projects may not have undergone revision. Connect with me on [LinkedIn]((https://www.linkedin.com/in/mariem-n/)) for discussions, collaborations, and more.
 
